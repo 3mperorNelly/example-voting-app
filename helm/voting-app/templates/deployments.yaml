@@ -1,0 +1,122 @@
+# REDIS
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  labels:
+    app: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: {{ .Values.redis.image }}
+        ports:
+        - containerPort: {{ .Values.redis.port }}
+---
+# DB
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db
+  labels:
+    app: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+      - name: db
+        image: {{ .Values.db.image }}
+        env:
+        - name: POSTGRES_USER
+          value: {{ .Values.db.user | quote }}
+        - name: POSTGRES_PASSWORD
+          value: {{ .Values.db.password | quote }}
+        - name: POSTGRES_DB
+          value: {{ .Values.db.name | quote }}
+        ports:
+        - containerPort: {{ .Values.db.port }}
+---
+# VOTE
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vote
+  labels:
+    app: vote
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vote
+  template:
+    metadata:
+      labels:
+        app: vote
+    spec:
+      containers:
+      - name: vote
+        image: {{ .Values.vote.image }}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: {{ .Values.vote.targetPort }}
+---
+# RESULT
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: result
+  labels:
+    app: result
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: result
+  template:
+    metadata:
+      labels:
+        app: result
+    spec:
+      containers:
+      - name: result
+        image: {{ .Values.result.image }}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: {{ .Values.result.targetPort }}
+---
+# WORKER
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  labels:
+    app: worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      containers:
+      - name: worker
+        image: {{ .Values.worker.image }}
+        imagePullPolicy: Always

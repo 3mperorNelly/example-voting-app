@@ -1,0 +1,51 @@
+# REDIS SERVICE
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+spec:
+  type: ClusterIP
+  ports:
+  - port: {{ .Values.redis.port }}
+    targetPort: {{ .Values.redis.port }}
+  selector:
+    app: redis
+---
+# DB SERVICE
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+spec:
+  type: ClusterIP
+  ports:
+  - port: {{ .Values.db.port }}
+    targetPort: {{ .Values.db.port }}
+  selector:
+    app: db
+---
+# VOTE SERVICE
+apiVersion: v1
+kind: Service
+metadata:
+  name: vote
+spec:
+  type: LoadBalancer
+  ports:
+  - port: {{ .Values.vote.servicePort }}
+    targetPort: {{ .Values.vote.targetPort }}
+  selector:
+    app: vote
+---
+# RESULT SERVICE
+apiVersion: v1
+kind: Service
+metadata:
+  name: result
+spec:
+  type: LoadBalancer
+  ports:
+  - port: {{ .Values.result.servicePort }}
+    targetPort: {{ .Values.result.targetPort }}
+  selector:
+    app: result

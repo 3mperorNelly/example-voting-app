@@ -1,0 +1,23 @@
+redis:
+  image: redis:alpine
+  port: 6379
+
+db:
+  image: postgres:15-alpine
+  port: 5432
+  user: postgres
+  password: postgres
+  name: postgres
+
+vote:
+  image: 376726737739.dkr.ecr.eu-north-1.amazonaws.com/voting-app/vote:latest
+  servicePort: 80
+  targetPort: 80
+
+result:
+  image: 376726737739.dkr.ecr.eu-north-1.amazonaws.com/voting-app/result:latest
+  servicePort: 80
+  targetPort: 4000
+
+worker:
+  image: 376726737739.dkr.ecr.eu-north-1.amazonaws.com/voting-app/worker:latest
